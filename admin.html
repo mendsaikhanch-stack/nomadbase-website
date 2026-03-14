@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NomadBase Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   ADMIN PANEL CSS
+   Энэ бол удирдлагын хуудас.
+   /admin.html хаягаар нэвтэрнэ.
+   ============================================ */
+:root {
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --border: #2a2d3a;
+  --text: #e4e4e7;
+  --muted: #71717a;
+  --accent: #C8A96E;
+  --accent-hover: #d4b87e;
+  --danger: #ef4444;
+  --success: #22c55e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh;
+}
+
+/* LOGIN SCREEN - Нэвтрэх дэлгэц */
+.login-screen {
+  min-height: 100vh; display: flex;
+  align-items: center; justify-content: center;
+}
+.login-box {
+  background: var(--card); padding: 3rem;
+  border-radius: 12px; border: 1px solid var(--border);
+  width: 380px; text-align: center;
+}
+.login-box h1 {
+  font-size: 1.5rem; margin-bottom: 0.3rem;
+}
+.login-box h1 span { color: var(--accent); }
+.login-box p { font-size: 0.8rem; color: var(--muted); margin-bottom: 2rem; }
+.login-box input {
+  width: 100%; padding: 0.8rem 1rem;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text);
+  font-family: inherit; font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+.login-box input:focus { outline: none; border-color: var(--accent); }
+.login-box button {
+  width: 100%; padding: 0.8rem;
+  background: var(--accent); color: #000;
+  border: none; border-radius: 6px;
+  font-weight: 600; font-size: 0.9rem;
+  cursor: pointer; transition: 0.3s;
+}
+.login-box button:hover { background: var(--accent-hover); }
+.login-error {
+  color: var(--danger); font-size: 0.8rem;
+  margin-top: 0.5rem; display: none;
+}
+
+/* ADMIN LAYOUT - Хажуу цэс + контент */
+.admin-layout {
+  display: none; /* Нэвтэрсний дараа харагдана */
+  min-height: 100vh;
+}
+.sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0;
+  width: 240px; background: var(--card);
+  border-right: 1px solid var(--border);
+  padding: 1.5rem 0;
+  overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 0 1.5rem; margin-bottom: 2rem;
+  font-size: 1.2rem; font-weight: 700;
+}
+.sidebar-logo span { color: var(--accent); }
+.sidebar-label {
+  padding: 0.5rem 1.5rem; font-size: 0.65rem;
+  font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--muted);
+}
+.sidebar a {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.7rem 1.5rem; color: var(--muted);
+  text-decoration: none; font-size: 0.85rem;
+  transition: 0.2s; border-left: 3px solid transparent;
+}
+.sidebar a:hover, .sidebar a.active {
+  color: var(--text); background: rgba(200,169,110,0.06);
+  border-left-color: var(--accent);
+}
+.sidebar a .icon { font-size: 1.1rem; width: 24px; text-align: center; }
+
+/* Main content area */
+.main-content {
+  margin-left: 240px; padding: 2rem;
+}
+.page-header {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.page-header h2 { font-size: 1.4rem; }
+.page-header .view-site {
+  color: var(--accent); text-decoration: none;
+  font-size: 0.8rem; font-weight: 500;
+}
+
+/* CARDS & FORMS */
+.admin-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.admin-card h3 {
+  font-size: 1rem; margin-bottom: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.form-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1rem; margin-bottom: 1rem;
+}
+.form-group {
+  display: flex; flex-direction: column; gap: 0.3rem;
+  margin-bottom: 0.8rem;
+}
+.form-group label {
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted);
+}
+.form-group input, .form-group select, .form-group textarea {
+  padding: 0.7rem 0.8rem;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text);
+  font-family: inherit; font-size: 0.85rem;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+.form-group textarea { min-height: 80px; resize: vertical; }
+
+/* Buttons */
+.btn-save {
+  padding: 0.7rem 1.5rem;
+  background: var(--accent); color: #000;
+  border: none; border-radius: 6px;
+  font-weight: 600; font-size: 0.8rem;
+  cursor: pointer; transition: 0.3s;
+  letter-spacing: 0.05em;
+}
+.btn-save:hover { background: var(--accent-hover); }
+.btn-add {
+  padding: 0.5rem 1rem;
+  background: transparent; color: var(--accent);
+  border: 1px dashed var(--accent);
+  border-radius: 6px; font-size: 0.8rem;
+  cursor: pointer; transition: 0.3s;
+  width: 100%;
+}
+.btn-add:hover { background: rgba(200,169,110,0.1); }
+.btn-delete {
+  padding: 0.4rem 0.8rem;
+  background: transparent; color: var(--danger);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 4px; font-size: 0.7rem;
+  cursor: pointer; transition: 0.3s;
+}
+.btn-delete:hover { background: rgba(239,68,68,0.1); }
+
+/* Image upload area */
+.image-upload {
+  border: 2px dashed var(--border);
+  border-radius: 8px; padding: 1.5rem;
+  text-align: center; cursor: pointer;
+  transition: 0.3s; position: relative;
+  overflow: hidden;
+}
+.image-upload:hover { border-color: var(--accent); }
+.image-upload img {
+  max-width: 100%; max-height: 200px;
+  border-radius: 4px; margin-top: 0.5rem;
+}
+.image-upload input[type="file"] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer;
+}
+.image-upload p { color: var(--muted); font-size: 0.8rem; }
+
+/* Dynamic list items */
+.list-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.8rem; margin-bottom: 0.5rem;
+  background: var(--bg); border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.list-item .item-info { flex: 1; }
+.list-item .item-name { font-size: 0.9rem; font-weight: 500; }
+.list-item .item-detail { font-size: 0.75rem; color: var(--muted); }
+
+/* Toast notification */
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem;
+  background: var(--success); color: #fff;
+  padding: 0.8rem 1.5rem; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 500;
+  transform: translateY(100px); opacity: 0;
+  transition: all 0.3s;
+  z-index: 9999;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* Tabs */
+.tab-nav {
+  display: flex; gap: 0; margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  padding: 0.7rem 1.2rem;
+  background: none; border: none;
+  color: var(--muted); font-size: 0.82rem;
+  font-weight: 500; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: 0.3s; font-family: inherit;
+}
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Section panels */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Status badge */
+.status-saved {
+  display: inline-block;
+  font-size: 0.7rem; color: var(--success);
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .sidebar { width: 60px; }
+  .sidebar-logo, .sidebar-label, .sidebar a span { display: none; }
+  .sidebar a { justify-content: center; padding: 0.8rem; }
+  .main-content { margin-left: 60px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     LOGIN SCREEN / НЭВТРЭХ ДЭЛГЭЦ
+     Нууц үг: admin123 (доорх JS дотор солих боломжтой)
+     ============================================ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>Nomad<span>Base</span></h1>
+    <p>Admin Panel — Удирдлагын хэсэг</p>
+    <input type="password" id="loginPassword" placeholder="Нууц үг оруулна уу..." onkeyup="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">Нэвтрэх</button>
+    <div class="login-error" id="loginError">Нууц үг буруу байна</div>
+  </div>
+</div>
+
+<!-- ============================================
+     ADMIN LAYOUT
+     Sidebar (зүүн цэс) + Main content (баруун контент)
+     ============================================ -->
+<div class="admin-layout" id="adminLayout">
+
+  <!-- SIDEBAR / ХАЖУУ ЦЭС -->
+  <div class="sidebar">
+    <div class="sidebar-logo">Nomad<span>Base</span></div>
+    <div class="sidebar-label">Удирдлага</div>
+    <a href="#" class="active" onclick="showPanel('images',this)"><span class="icon">🖼️</span><span>Зургууд</span></a>
+    <a href="#" onclick="showPanel('pricing',this)"><span class="icon">💰</span><span>Үнэ</span></a>
+    <a href="#" onclick="showPanel('menu',this)"><span class="icon">🍽️</span><span>Хоолны цэс</span></a>
+    <a href="#" onclick="showPanel('activities',this)"><span class="icon">🐎</span><span>Үйл ажиллагаа</span></a>
+    <a href="#" onclick="showPanel('services',this)"><span class="icon">✨</span><span>Нэмэлт үйлчилгээ</span></a>
+    <div class="sidebar-label" style="margin-top:1.5rem;">Систем</div>
+    <a href="#" onclick="showPanel('settings',this)"><span class="icon">⚙️</span><span>Тохиргоо</span></a>
+    <a href="index.html" target="_blank"><span class="icon">🌐</span><span>Сайт үзэх</span></a>
+    <a href="#" onclick="doLogout()"><span class="icon">🚪</span><span>Гарах</span></a>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <div class="page-header">
+      <h2 id="pageTitle">🖼️ Зургууд удирдах</h2>
+      <a href="index.html" target="_blank" class="view-site">Сайт үзэх →</a>
+    </div>
+
+    <!-- ===== PANEL 1: ЗУРГУУД ===== -->
+    <div class="panel active" id="panel-images">
+      <div class="admin-card">
+        <h3>🏔️ Hero зураг (Нүүр хуудасны том зураг)</h3>
+        <div class="image-upload" id="heroUpload">
+          <p>Зураг сонгохын тулд дарна уу эсвэл чирж оруулна уу</p>
+          <p style="font-size:0.7rem;color:var(--muted);margin-top:0.3rem;">Санал болгох хэмжээ: 1920x1080px, JPG/PNG</p>
+          <img id="heroPreview" style="display:none;">
+          <input type="file" accept="image/*" onchange="handleImageUpload(this,'hero','heroPreview')">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="admin-card">
+          <h3>🏠 Монгол гэр</h3>
+          <div class="image-upload" id="gerUpload">
+            <p>Гэрийн зураг оруулах</p>
+            <img id="gerPreview" style="display:none;">
+            <input type="file" accept="image/*" onchange="handleImageUpload(this,'ger','gerPreview')">
+          </div>
+        </div>
+        <div class="admin-card">
+          <h3>🪵 Модон байшин</h3>
+          <div class="image-upload" id="cabinUpload">
+            <p>Модон байшингийн зураг оруулах</p>
+            <img id="cabinPreview" style="display:none;">
+            <input type="file" accept="image/*" onchange="handleImageUpload(this,'cabin','cabinPreview')">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="admin-card">
+          <h3>👑 Тансаг байр</h3>
+          <div class="image-upload" id="suiteUpload">
+            <p>Тансаг байрны зураг оруулах</p>
+            <img id="suitePreview" style="display:none;">
+            <input type="file" accept="image/*" onchange="handleImageUpload(this,'suite','suitePreview')">
+          </div>
+        </div>
+        <div class="admin-card">
+          <h3>🌄 About зураг</h3>
+          <div class="image-upload" id="aboutUpload">
+            <p>Бидний тухай хэсгийн зураг</p>
+            <img id="aboutPreview" style="display:none;">
+            <input type="file" accept="image/*" onchange="handleImageUpload(this,'about','aboutPreview')">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-save" onclick="saveAllImages()">💾 Зургууд хадгалах</button>
+    </div>
+
+    <!-- ===== PANEL 2: ҮНЭ ===== -->
+    <div class="panel" id="panel-pricing">
+      <div class="admin-card">
+        <h3>💰 Байрлалын үнэ (шөнө тутам)</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Монгол гэр ($/шөнө)</label>
+            <input type="number" id="price-ger" value="45">
+          </div>
+          <div class="form-group">
+            <label>Модон байшин ($/шөнө)</label>
+            <input type="number" id="price-cabin" value="65">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Тансаг байр ($/шөнө)</label>
+          <input type="number" id="price-suite" value="95">
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>📦 Багцын үнэ</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Explorer ($/шөнө) — 3-7 хоног</label>
+            <input type="number" id="price-explorer" value="75">
+          </div>
+          <div class="form-group">
+            <label>Nomad ($/сар) — 1-3 сар</label>
+            <input type="number" id="price-nomad" value="950">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Basecamp ($/сар) — 3+ сар</label>
+          <input type="number" id="price-basecamp" value="750">
+        </div>
+      </div>
+
+      <button class="btn-save" onclick="savePricing()">💾 Үнэ хадгалах</button>
+    </div>
+
+    <!-- ===== PANEL 3: ХООЛНЫ ЦЭС ===== -->
+    <div class="panel" id="panel-menu">
+      <div class="admin-card">
+        <h3>🍳 Өглөөний цай</h3>
+        <div id="breakfast-list"></div>
+        <button class="btn-add" onclick="addMenuItem('breakfast')">+ Хоол нэмэх</button>
+      </div>
+      <div class="admin-card">
+        <h3>🥘 Өдрийн хоол</h3>
+        <div id="lunch-list"></div>
+        <button class="btn-add" onclick="addMenuItem('lunch')">+ Хоол нэмэх</button>
+      </div>
+      <div class="admin-card">
+        <h3>🍖 Оройн хоол</h3>
+        <div id="dinner-list"></div>
+        <button class="btn-add" onclick="addMenuItem('dinner')">+ Хоол нэмэх</button>
+      </div>
+      <button class="btn-save" onclick="saveMenu()">💾 Хоолны цэс хадгалах</button>
+    </div>
+
+    <!-- ===== PANEL 4: ҮЙЛ АЖИЛЛАГАА ===== -->
+    <div class="panel" id="panel-activities">
+      <div class="admin-card">
+        <h3>🐎 Үйл ажиллагааны хуваарь</h3>
+        <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;">Зочдод санал болгох үйл ажиллагаа, цаг, үнийн мэдээлэл</p>
+        <div id="activities-list"></div>
+        <button class="btn-add" onclick="addActivity()">+ Үйл ажиллагаа нэмэх</button>
+      </div>
+      <button class="btn-save" onclick="saveActivities()">💾 Үйл ажиллагаа хадгалах</button>
+    </div>
+
+    <!-- ===== PANEL 5: НЭМЭЛТ ҮЙЛЧИЛГЭЭ ===== -->
+    <div class="panel" id="panel-services">
+      <div class="admin-card">
+        <h3>✨ Нэмэлт үйлчилгээнүүд</h3>
+        <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;">Угаалга, трансфер, тоног төхөөрөмж түрээс гэх мэт</p>
+        <div id="services-list"></div>
+        <button class="btn-add" onclick="addService()">+ Үйлчилгээ нэмэх</button>
+      </div>
+      <button class="btn-save" onclick="saveServices()">💾 Үйлчилгээ хадгалах</button>
+    </div>
+
+    <!-- ===== PANEL 6: ТОХИРГОО ===== -->
+    <div class="panel" id="panel-settings">
+      <div class="admin-card">
+        <h3>⚙️ Ерөнхий тохиргоо</h3>
+        <div class="form-group">
+          <label>Сайтын нэр</label>
+          <input type="text" id="setting-name" value="NomadBase Mongolia">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Имэйл</label>
+            <input type="email" id="setting-email" value="info@nomadbase.mn">
+          </div>
+          <div class="form-group">
+            <label>Утас</label>
+            <input type="text" id="setting-phone" value="+976 9911 2233">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Хаяг</label>
+          <input type="text" id="setting-address" value="Central Mongolia">
+        </div>
+      </div>
+      <div class="admin-card">
+        <h3>🔐 Нууц үг солих</h3>
+        <div class="form-group">
+          <label>Шинэ нууц үг</label>
+          <input type="password" id="new-password" placeholder="Шинэ нууц үг...">
+        </div>
+        <button class="btn-save" onclick="changePassword()" style="margin-bottom:1rem;">🔐 Нууц үг солих</button>
+      </div>
+      <button class="btn-save" onclick="saveSettings()">💾 Тохиргоо хадгалах</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">Амжилттай хадгалагдлаа ✓</div>
+
+<script>
+/* ============================================
+   ADMIN PANEL JAVASCRIPT
+   
+   БҮТЭЦ:
+   1. LOGIN - Нэвтрэх/Гарах
+   2. PANEL NAVIGATION - Хуудас солих
+   3. IMAGE MANAGEMENT - Зураг удирдах
+   4. PRICING - Үнэ удирдах
+   5. MENU - Хоолны цэс удирдах
+   6. ACTIVITIES - Үйл ажиллагаа удирдах
+   7. SERVICES - Нэмэлт үйлчилгээ удирдах
+   8. SETTINGS - Тохиргоо
+   9. HELPER FUNCTIONS - Туслах функцүүд
+   
+   ӨГӨГДЛИЙН ХАДГАЛАЛТ:
+   localStorage ашиглана. Бүх өгөгдөл browser дотор
+   хадгалагдана. index.html мөн localStorage-аас уншина.
+   ============================================ */
+
+// ===== 1. LOGIN / НЭВТРЭХ =====
+// Анхны нууц үг: admin123 (Settings хэсгээс солих боломжтой)
+const DEFAULT_PASSWORD = 'admin123';
+
+function doLogin() {
+  const pw = document.getElementById('loginPassword').value;
+  const savedPw = localStorage.getItem('nb_admin_password') || DEFAULT_PASSWORD;
+  if (pw === savedPw) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminLayout').style.display = 'block';
+    sessionStorage.setItem('nb_logged_in', 'true');
+    loadAllData();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('nb_logged_in');
+  location.reload();
+}
+
+// Хуудас ачааллахад нэвтэрсэн эсэхийг шалгана
+if (sessionStorage.getItem('nb_logged_in') === 'true') {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminLayout').style.display = 'block';
+  window.addEventListener('DOMContentLoaded', loadAllData);
+}
+
+// ===== 2. PANEL NAVIGATION / ХУУДАС СОЛИХ =====
+const pageTitles = {
+  images: '🖼️ Зургууд удирдах',
+  pricing: '💰 Үнэ удирдах',
+  menu: '🍽️ Хоолны цэс удирдах',
+  activities: '🐎 Үйл ажиллагаа удирдах',
+  services: '✨ Нэмэлт үйлчилгээ удирдах',
+  settings: '⚙️ Тохиргоо'
+};
+
+function showPanel(name, el) {
+  // Бүх panel нуух
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  // Сонгосон panel харуулах
+  document.getElementById('panel-' + name).classList.add('active');
+  // Sidebar active state
+  document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+  if (el) el.classList.add('active');
+  // Гарчиг солих
+  document.getElementById('pageTitle').textContent = pageTitles[name] || name;
+}
+
+// ===== 3. IMAGE MANAGEMENT / ЗУРАГ УДИРДАХ =====
+// Зургийг base64 болгож localStorage-д хадгална
+const imageData = {};
+
+function handleImageUpload(input, key, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result;
+    imageData[key] = base64;
+    const preview = document.getElementById(previewId);
+    preview.src = base64;
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveAllImages() {
+  for (const key in imageData) {
+    localStorage.setItem('nb_img_' + key, imageData[key]);
+  }
+  showToast('Зургууд амжилттай хадгалагдлаа!');
+}
+
+function loadImages() {
+  const keys = ['hero', 'ger', 'cabin', 'suite', 'about'];
+  keys.forEach(key => {
+    const saved = localStorage.getItem('nb_img_' + key);
+    if (saved) {
+      const preview = document.getElementById(key + 'Preview');
+      if (preview) {
+        preview.src = saved;
+        preview.style.display = 'block';
+      }
+    }
+  });
+}
+
+// ===== 4. PRICING / ҮНЭ УДИРДАХ =====
+function savePricing() {
+  const pricing = {
+    ger: document.getElementById('price-ger').value,
+    cabin: document.getElementById('price-cabin').value,
+    suite: document.getElementById('price-suite').value,
+    explorer: document.getElementById('price-explorer').value,
+    nomad: document.getElementById('price-nomad').value,
+    basecamp: document.getElementById('price-basecamp').value
+  };
+  localStorage.setItem('nb_pricing', JSON.stringify(pricing));
+  showToast('Үнэ амжилттай хадгалагдлаа!');
+}
+
+function loadPricing() {
+  const saved = localStorage.getItem('nb_pricing');
+  if (saved) {
+    const p = JSON.parse(saved);
+    if (p.ger) document.getElementById('price-ger').value = p.ger;
+    if (p.cabin) document.getElementById('price-cabin').value = p.cabin;
+    if (p.suite) document.getElementById('price-suite').value = p.suite;
+    if (p.explorer) document.getElementById('price-explorer').value = p.explorer;
+    if (p.nomad) document.getElementById('price-nomad').value = p.nomad;
+    if (p.basecamp) document.getElementById('price-basecamp').value = p.basecamp;
+  }
+}
+
+// ===== 5. MENU / ХООЛНЫ ЦЭС УДИРДАХ =====
+let menuData = { breakfast: [], lunch: [], dinner: [] };
+
+function addMenuItem(meal) {
+  const name = prompt('Хоолны нэр:');
+  if (!name) return;
+  const desc = prompt('Тайлбар (жишээ: Монгол уламжлалт):') || '';
+  menuData[meal].push({ name, desc });
+  renderMenu(meal);
+}
+
+function removeMenuItem(meal, index) {
+  menuData[meal].splice(index, 1);
+  renderMenu(meal);
+}
+
+function renderMenu(meal) {
+  const list = document.getElementById(meal + '-list');
+  list.innerHTML = menuData[meal].map((item, i) => `
+    <div class="list-item">
+      <div class="item-info">
+        <div class="item-name">${item.name}</div>
+        <div class="item-detail">${item.desc}</div>
+      </div>
+      <button class="btn-delete" onclick="removeMenuItem('${meal}',${i})">Устгах</button>
+    </div>
+  `).join('');
+}
+
+function saveMenu() {
+  localStorage.setItem('nb_menu', JSON.stringify(menuData));
+  showToast('Хоолны цэс амжилттай хадгалагдлаа!');
+}
+
+function loadMenu() {
+  const saved = localStorage.getItem('nb_menu');
+  if (saved) {
+    menuData = JSON.parse(saved);
+  } else {
+    // Анхны өгөгдөл
+    menuData = {
+      breakfast: [
+        { name: 'Монгол сүүтэй цай', desc: 'Уламжлалт' },
+        { name: 'Шарсан өндөг', desc: 'Талхтай' },
+        { name: 'Боов, бантан', desc: 'Монгол уламжлалт' }
+      ],
+      lunch: [
+        { name: 'Бууз', desc: 'Монгол уламжлалт' },
+        { name: 'Хуушуур', desc: 'Шарсан мантуу' },
+        { name: 'Цуйван', desc: 'Гурилтай шөл' }
+      ],
+      dinner: [
+        { name: 'Хорхог', desc: 'Монгол шарсан мах' },
+        { name: 'Бодог', desc: 'Уламжлалт' },
+        { name: 'Шөл', desc: 'Махтай шөл' }
+      ]
+    };
+  }
+  ['breakfast', 'lunch', 'dinner'].forEach(renderMenu);
+}
+
+// ===== 6. ACTIVITIES / ҮЙЛ АЖИЛЛАГАА =====
+let activitiesData = [];
+
+function addActivity() {
+  const name = prompt('Нэр (жишээ: Морь унах):');
+  if (!name) return;
+  const time = prompt('Цаг (жишээ: 09:00 - 11:00):') || '';
+  const price = prompt('Үнэ $ (хоосон = үнэгүй):') || 'Free';
+  const desc = prompt('Тайлбар:') || '';
+  activitiesData.push({ name, time, price, desc });
+  renderActivities();
+}
+
+function removeActivity(index) {
+  activitiesData.splice(index, 1);
+  renderActivities();
+}
+
+function renderActivities() {
+  const list = document.getElementById('activities-list');
+  list.innerHTML = activitiesData.map((item, i) => `
+    <div class="list-item">
+      <div class="item-info">
+        <div class="item-name">${item.name} — ${item.time}</div>
+        <div class="item-detail">${item.desc} | ${item.price === 'Free' ? 'Үнэгүй' : '$' + item.price}</div>
+      </div>
+      <button class="btn-delete" onclick="removeActivity(${i})">Устгах</button>
+    </div>
+  `).join('');
+}
+
+function saveActivities() {
+  localStorage.setItem('nb_activities', JSON.stringify(activitiesData));
+  showToast('Үйл ажиллагаа амжилттай хадгалагдлаа!');
+}
+
+function loadActivities() {
+  const saved = localStorage.getItem('nb_activities');
+  if (saved) {
+    activitiesData = JSON.parse(saved);
+  } else {
+    activitiesData = [
+      { name: 'Морь унах', time: '09:00 - 11:00', price: '25', desc: 'Тал нутгаар морь унах аялал' },
+      { name: 'Нум сум харвах', time: '14:00 - 15:30', price: '15', desc: 'Монгол уламжлалт нум харвах' },
+      { name: 'Нүүдэлчин гэр бүлд зочлох', time: '10:00 - 13:00', price: '30', desc: 'Жинхэнэ нүүдэлчин айлд зочлох' },
+      { name: 'Од харах', time: '21:00 - 23:00', price: 'Free', desc: 'Сар одны ажиглалт, дурангаар' }
+    ];
+  }
+  renderActivities();
+}
+
+// ===== 7. SERVICES / НЭМЭЛТ ҮЙЛЧИЛГЭЭ =====
+let servicesData = [];
+
+function addService() {
+  const name = prompt('Үйлчилгээний нэр:');
+  if (!name) return;
+  const price = prompt('Үнэ $ (хоосон = үнэгүй):') || 'Free';
+  const desc = prompt('Тайлбар:') || '';
+  servicesData.push({ name, price, desc });
+  renderServices();
+}
+
+function removeService(index) {
+  servicesData.splice(index, 1);
+  renderServices();
+}
+
+function renderServices() {
+  const list = document.getElementById('services-list');
+  list.innerHTML = servicesData.map((item, i) => `
+    <div class="list-item">
+      <div class="item-info">
+        <div class="item-name">${item.name}</div>
+        <div class="item-detail">${item.desc} | ${item.price === 'Free' ? 'Үнэгүй' : '$' + item.price}</div>
+      </div>
+      <button class="btn-delete" onclick="removeService(${i})">Устгах</button>
+    </div>
+  `).join('');
+}
+
+function saveServices() {
+  localStorage.setItem('nb_services', JSON.stringify(servicesData));
+  showToast('Нэмэлт үйлчилгээ амжилттай хадгалагдлаа!');
+}
+
+function loadServices() {
+  const saved = localStorage.getItem('nb_services');
+  if (saved) {
+    servicesData = JSON.parse(saved);
+  } else {
+    servicesData = [
+      { name: 'Угаалгын үйлчилгээ', price: '10', desc: 'Хувцас угаалга, индүүдэх' },
+      { name: 'Нисэх буудлын трансфер', price: '50', desc: 'УБ-аас кэмп хүртэл' },
+      { name: 'Дугуй түрээс', price: '15', desc: 'Өдрийн түрээс' },
+      { name: 'Хувийн жолооч', price: '80', desc: 'Өдрийн аялал' }
+    ];
+  }
+  renderServices();
+}
+
+// ===== 8. SETTINGS / ТОХИРГОО =====
+function saveSettings() {
+  const settings = {
+    name: document.getElementById('setting-name').value,
+    email: document.getElementById('setting-email').value,
+    phone: document.getElementById('setting-phone').value,
+    address: document.getElementById('setting-address').value
+  };
+  localStorage.setItem('nb_settings', JSON.stringify(settings));
+  showToast('Тохиргоо амжилттай хадгалагдлаа!');
+}
+
+function loadSettings() {
+  const saved = localStorage.getItem('nb_settings');
+  if (saved) {
+    const s = JSON.parse(saved);
+    if (s.name) document.getElementById('setting-name').value = s.name;
+    if (s.email) document.getElementById('setting-email').value = s.email;
+    if (s.phone) document.getElementById('setting-phone').value = s.phone;
+    if (s.address) document.getElementById('setting-address').value = s.address;
+  }
+}
+
+function changePassword() {
+  const newPw = document.getElementById('new-password').value;
+  if (!newPw || newPw.length < 4) {
+    alert('Нууц үг хамгийн багадаа 4 тэмдэгт байх ёстой');
+    return;
+  }
+  localStorage.setItem('nb_admin_password', newPw);
+  document.getElementById('new-password').value = '';
+  showToast('Нууц үг амжилттай солигдлоо!');
+}
+
+// ===== 9. HELPER FUNCTIONS =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function loadAllData() {
+  loadImages();
+  loadPricing();
+  loadMenu();
+  loadActivities();
+  loadServices();
+  loadSettings();
+}
+</script>
+</body>
+</html>

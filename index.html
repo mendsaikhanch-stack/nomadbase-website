@@ -1456,4 +1456,74 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('section').for
+document.querySelectorAll('section').forEach(section => {
+  section.style.opacity = '0';
+  section.style.transform = 'translateY(30px)';
+  section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+  observer.observe(section);
+});
+
+// ===== 5. ADMIN PANEL-ААС ӨГӨГДӨЛ УНШИХ =====
+// localStorage дотор admin panel-аас хадгалсан
+// зураг, үнэ зэргийг уншиж вэбсайтад харуулна.
+function loadAdminData() {
+  // ЗУРАГ УНШИХ
+  const heroImg = localStorage.getItem('nb_img_hero');
+  if (heroImg) {
+    document.querySelector('.hero-bg').style.background = 
+      "url('" + heroImg + "') center/cover no-repeat";
+  }
+  const gerImg = localStorage.getItem('nb_img_ger');
+  if (gerImg) {
+    document.querySelector('.accom-image.ger').style.background = 
+      "url('" + gerImg + "') center/cover no-repeat";
+  }
+  const cabinImg = localStorage.getItem('nb_img_cabin');
+  if (cabinImg) {
+    document.querySelector('.accom-image.cabin').style.background = 
+      "url('" + cabinImg + "') center/cover no-repeat";
+  }
+  const suiteImg = localStorage.getItem('nb_img_suite');
+  if (suiteImg) {
+    document.querySelector('.accom-image.suite').style.background = 
+      "url('" + suiteImg + "') center/cover no-repeat";
+  }
+  const aboutImg = localStorage.getItem('nb_img_about');
+  if (aboutImg) {
+    document.querySelector('.about-image-area').style.background = 
+      "url('" + aboutImg + "') center/cover no-repeat";
+  }
+
+  // ҮНЭ УНШИХ
+  const pricing = localStorage.getItem('nb_pricing');
+  if (pricing) {
+    const p = JSON.parse(pricing);
+    // Байрлалын үнэ
+    const priceEls = document.querySelectorAll('.accom-price .price');
+    if (priceEls[0] && p.ger) priceEls[0].textContent = '$' + p.ger;
+    if (priceEls[1] && p.cabin) priceEls[1].textContent = '$' + p.cabin;
+    if (priceEls[2] && p.suite) priceEls[2].textContent = '$' + p.suite;
+    // Багцын үнэ
+    const packageEls = document.querySelectorAll('.price-amount');
+    if (packageEls[0] && p.explorer) packageEls[0].innerHTML = '$' + p.explorer + '<span>/night</span>';
+    if (packageEls[1] && p.nomad) packageEls[1].innerHTML = '$' + p.nomad + '<span>/month</span>';
+    if (packageEls[2] && p.basecamp) packageEls[2].innerHTML = '$' + p.basecamp + '<span>/month</span>';
+  }
+
+  // ХОЛБОО БАРИХ МЭДЭЭЛЭЛ
+  const settings = localStorage.getItem('nb_settings');
+  if (settings) {
+    const s = JSON.parse(settings);
+    const footerBrand = document.querySelector('.footer-brand p:last-child');
+    if (footerBrand && s.email) {
+      footerBrand.innerHTML = '<small style="color:var(--gold);">📍 ' + (s.address || 'Central Mongolia') + '</small><br><small>' + s.email + '</small><br><small>' + (s.phone || '') + '</small>';
+    }
+  }
+}
+
+// Хуудас ачаалагдахад admin өгөгдөл уншина
+loadAdminData();
+</script>
+
+</body>
+</html>
