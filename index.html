@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nomad Base Mongolia — Digital Nomad Retreat</title>
+<meta name="description" content="Mongolia's premier digital nomad retreat. 5.5 hectares, 10 wooden cabins, traditional gers, coworking space, and community dining. Book now.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CSS ХУВЬСАГЧИД (Variables)
+   Бүх өнгө, загварыг нэг дороос удирдана.
+   Өөрчлөх бол зөвхөн энд засна.
+   ============================================ */
+:root {
+  --sand: #E8DFD0;
+  --earth: #3B2F25;
+  --sky: #5B8BA0;
+  --steppe: #7A8B5C;
+  --gold: #C8A96E;
+  --cream: #F5F0E8;
+  --dark: #1A1510;
+  --white: #FEFCF8;
+  --rust: #B8714A;
+}
+
+/* ============================================
+   RESET & ҮНДСЭН ЗАГВАР
+   Бүх элементийн анхны margin/padding арилгаж,
+   box-sizing тохируулна.
+   ============================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--earth);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ============================================
+   NAVIGATION / ЦЭС
+   - position: fixed = дэлгэцийн дээд хэсэгт
+     бэхэлсэн, scroll хийхэд мөн харагдана
+   - z-index: 1000 = бусад элементийн дээр
+   - .scrolled класс: JS-ээр нэмэгдэх ба
+     scroll хийхэд бараан background гарна
+   ============================================ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 1.2rem 4%;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.4s ease;
+}
+nav.scrolled {
+  background: rgba(26,21,16,0.95);
+  backdrop-filter: blur(20px);
+  padding: 0.7rem 4%;
+  box-shadow: 0 2px 30px rgba(0,0,0,0.15);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--white); text-decoration: none;
+}
+.nav-logo span { color: var(--gold); }
+
+/* Цэсийн линкүүд - flexbox-оор зэрэгцүүлнэ */
+.nav-links { display: flex; gap: 1.8rem; align-items: center; }
+.nav-links a {
+  color: rgba(255,255,255,0.85); text-decoration: none;
+  font-size: 0.8rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--gold); }
+
+/* ============================================
+   ТОВЧНУУД (Buttons)
+   - .btn-primary: Үндсэн CTA товч (алтлаг)
+   - .btn-outline: Хүрээтэй товч (ил тод)
+   - .btn-secondary: Хоёрдогч товч (хүснэгтэд)
+   ============================================ */
+.btn-primary {
+  display: inline-block;
+  background: var(--gold); color: var(--dark);
+  padding: 0.7rem 1.6rem; border: none; border-radius: 3px;
+  font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer;
+  transition: all 0.3s;
+}
+.btn-primary:hover { background: var(--white); color: var(--dark); transform: translateY(-2px); }
+
+.btn-outline {
+  display: inline-block;
+  padding: 0.7rem 1.6rem;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: var(--white); border-radius: 3px;
+  font-size: 0.8rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; transition: all 0.3s;
+}
+.btn-outline:hover { background: rgba(255,255,255,0.1); border-color: var(--gold); color: var(--gold); }
+
+.btn-secondary {
+  display: inline-block; width: 100%;
+  padding: 0.7rem; border: 1px solid rgba(59,47,37,0.15);
+  background: transparent; color: var(--earth);
+  border-radius: 3px; font-size: 0.8rem;
+  font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer;
+  transition: all 0.3s; text-decoration: none;
+  text-align: center;
+}
+.btn-secondary:hover { background: var(--earth); color: var(--white); }
+
+/* ============================================
+   HAMBURGER ЦЭС (Гар утасны цэс)
+   - 768px-ээс доош дэлгэцэнд харагдана
+   - 3 зураас бүхий товч
+   - Дарахад бүтэн дэлгэцийн цэс нээгдэнэ
+   ============================================ */
+.hamburger { display: none; cursor: pointer; background: none; border: none; padding: 5px; }
+.hamburger span { display: block; width: 26px; height: 2px; background: var(--white); margin: 5px 0; transition: 0.3s; }
+.mobile-menu {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: rgba(26,21,16,0.97); backdrop-filter: blur(20px);
+  flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+}
+.mobile-menu.active { display: flex; }
+.mobile-menu a {
+  color: var(--white); text-decoration: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; transition: color 0.3s;
+}
+.mobile-menu a:hover { color: var(--gold); }
+.close-menu {
+  position: absolute; top: 1.5rem; right: 2rem;
+  background: none; border: none; color: var(--white);
+  font-size: 2rem; cursor: pointer;
+}
+
+/* ============================================
+   HERO SECTION / НҮҮР ХУУДАС
+   - height: 100vh = бүтэн дэлгэцийн өндөр
+   - Gradient background = Монголын тэнгэр + тал
+   - Hero overlay = текст уншигдахын тулд
+     бараан давхарга нэмнэ
+   - Animation: fadeUp = доороос дээш гарч ирнэ
+   ============================================ */
+.hero {
+  height: 100vh; min-height: 700px;
+  position: relative; display: flex;
+  align-items: center; justify-content: center;
+  overflow: hidden; text-align: center;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(180deg, #3A6B85 0%, #6A9DB5 25%, #A8C4D0 50%, #C4BFA0 70%, #7A8B5C 85%, #5A6B3E 100%);
+}
+.hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgba(26,21,16,0.4) 0%, rgba(26,21,16,0.1) 40%, rgba(26,21,16,0.5) 100%);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 800px; padding: 0 2rem;
+  animation: fadeUp 1s ease 0.3s both;
+}
+/* fadeUp анимэйшн: 0.3 секундын дараа
+   доороос дээш 40px шилжиж гарч ирнэ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-tag {
+  display: inline-block;
+  font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.5rem;
+  padding: 0.4rem 1.2rem;
+  border: 1px solid rgba(200,169,110,0.4);
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 700; line-height: 1.1;
+  color: var(--white); margin-bottom: 1.2rem;
+}
+.hero h1 em { font-style: italic; color: var(--gold); }
+.hero p {
+  font-size: 1.05rem; color: rgba(255,255,255,0.8);
+  max-width: 550px; margin: 0 auto 2rem;
+  font-weight: 300; line-height: 1.7;
+}
+.hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* Scroll indicator - доошоо чиглэсэн анимэйшн */
+.scroll-indicator {
+  position: absolute; bottom: 2rem; left: 50%;
+  transform: translateX(-50%); z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+}
+.scroll-indicator span { color: rgba(255,255,255,0.5); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; }
+.scroll-line { width: 1px; height: 40px; background: rgba(255,255,255,0.3); position: relative; overflow: hidden; }
+.scroll-line::after {
+  content: ''; position: absolute; top: -100%; left: 0;
+  width: 100%; height: 100%; background: var(--gold);
+  animation: scrollDown 2s infinite;
+}
+@keyframes scrollDown { 0%{top:-100%} 50%{top:0} 100%{top:100%} }
+
+/* ============================================
+   SECTION ЕРӨНХИЙ ЗАГВАР
+   Бүх section-д ижил дотоод зай (padding) өгнө.
+   section-tag, section-title, section-desc нь
+   бүх хэсэгт давтагдах дэд гарчиг юм.
+   ============================================ */
+section { padding: 6rem 4%; }
+.section-tag {
+  display: inline-block;
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--sky); margin-bottom: 1rem;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700; line-height: 1.2;
+  margin-bottom: 1rem;
+}
+.section-desc {
+  font-size: 1rem; color: rgba(59,47,37,0.7);
+  max-width: 600px; line-height: 1.8; font-weight: 300;
+}
+
+/* ============================================
+   STATS BAR / ТООН МЭДЭЭЛЭЛ
+   Hero-ийн доор байрлах 4 баганатай статистик.
+   Grid ашиглан жигд хуваана.
+   ============================================ */
+.stats-bar {
+  background: var(--dark); color: var(--white);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  text-align: center;
+}
+.stat-item {
+  padding: 2.5rem 1.5rem;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.stat-item:last-child { border-right: none; }
+.stat-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem; font-weight: 700;
+  color: var(--gold); line-height: 1;
+  margin-bottom: 0.3rem;
+}
+.stat-label {
+  font-size: 0.75rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: rgba(255,255,255,0.5);
+}
+
+/* ============================================
+   ABOUT / БИДНИЙ ТУХАЙ
+   2 баганатай grid layout:
+   - Зүүн: Текст + 4 feature карт
+   - Баруун: Том зургийн хэсэг
+   ============================================ */
+.about { background: var(--cream); }
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; max-width: 1200px; margin: 0 auto;
+  align-items: start;
+}
+/* Feature карт: 2x2 grid */
+.about-features {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  margin-top: 2rem;
+}
+.feature-card {
+  background: var(--white);
+  padding: 1.8rem; border-radius: 4px;
+  border: 1px solid rgba(59,47,37,0.06);
+  transition: all 0.3s;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(59,47,37,0.08);
+}
+.feature-icon { font-size: 1.8rem; margin-bottom: 0.8rem; display: block; }
+.feature-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+.feature-card p { font-size: 0.82rem; color: rgba(59,47,37,0.6); line-height: 1.6; }
+.about-image-area {
+  position: relative;
+  background: var(--steppe);
+  border-radius: 4px; height: 500px;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.about-image-area::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(122,139,92,0.9), rgba(91,139,160,0.7));
+  z-index: 1;
+}
+.about-image-text {
+  position: relative; z-index: 2;
+  text-align: center; color: var(--white); padding: 2rem;
+}
+.about-image-text .big-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem; font-weight: 700;
+  color: var(--gold); line-height: 1;
+}
+
+/* ============================================
+   ACCOMMODATIONS / БАЙРЛАЛ
+   3 карттай grid:
+   - Гэр (Traditional Ger)
+   - Модон байшин (Wooden Cabin)
+   - Удирдлагын байр (Director's Suite)
+   Карт бүр: зураг + мэдээлэл + үнэ
+   ============================================ */
+.accommodations { background: var(--white); }
+.accom-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2rem; max-width: 1200px; margin: 2rem auto 0;
+}
+.accom-card {
+  border-radius: 4px; overflow: hidden;
+  border: 1px solid rgba(59,47,37,0.08);
+  transition: all 0.4s; background: var(--cream);
+}
+.accom-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(59,47,37,0.1);
+}
+.accom-image { height: 220px; position: relative; }
+.accom-image.ger { background: linear-gradient(135deg, #6A9DB5, #A8C4D0); }
+.accom-image.cabin { background: linear-gradient(135deg, #8B6F4E, #A0845C); }
+.accom-image.suite { background: linear-gradient(135deg, #7A8B5C, #5B8BA0); }
+.accom-image-label {
+  position: absolute; bottom: 1rem; left: 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem; font-weight: 700;
+  color: rgba(255,255,255,0.15);
+}
+.accom-body { padding: 1.8rem; }
+.accom-type {
+  font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--sky); margin-bottom: 0.5rem;
+}
+.accom-body h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 700; margin-bottom: 0.6rem;
+}
+.accom-body p { font-size: 0.85rem; color: rgba(59,47,37,0.65); line-height: 1.7; margin-bottom: 1rem; }
+.accom-details { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.2rem; }
+.accom-tag {
+  font-size: 0.7rem; padding: 0.3rem 0.7rem;
+  background: rgba(91,139,160,0.08); border-radius: 2px;
+  color: var(--sky); font-weight: 500;
+}
+.accom-price { display: flex; align-items: baseline; gap: 0.3rem; }
+.accom-price .price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem; font-weight: 700;
+}
+.accom-price .per { font-size: 0.75rem; color: rgba(59,47,37,0.5); }
+
+/* ============================================
+   FACILITIES / БАЙГУУЛАМЖ
+   Бараан background дээр 2 баганатай grid.
+   Байгууламж бүр: icon + гарчиг + тайлбар
+   ============================================ */
+.facilities { background: var(--dark); color: var(--white); }
+.facilities .section-tag { color: var(--gold); }
+.facilities .section-title { color: var(--white); }
+.facilities .section-desc { color: rgba(255,255,255,0.6); }
+.facility-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem; max-width: 1000px; margin: 3rem auto 0;
+}
+.facility-item {
+  display: flex; gap: 1.2rem; align-items: flex-start;
+  padding: 1.8rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px; transition: all 0.3s;
+}
+.facility-item:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(200,169,110,0.2);
+}
+.facility-icon {
+  font-size: 2rem; flex-shrink: 0;
+  width: 50px; height: 50px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(200,169,110,0.1); border-radius: 4px;
+}
+.facility-item h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+.facility-item p { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+/* ============================================
+   EXPERIENCE / ТУРШЛАГА (Нэг өдөр)
+   Timeline загвар:
+   - Зүүн талд босоо шугам (::before)
+   - Цэг бүр = нэг цагийн хуваарь
+   ============================================ */
+.experience { background: var(--cream); }
+.timeline {
+  max-width: 700px; margin: 3rem auto 0;
+  position: relative; padding-left: 3rem;
+}
+.timeline::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px; background: rgba(59,47,37,0.1);
+}
+.timeline-item { position: relative; padding-bottom: 2.5rem; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-dot {
+  position: absolute; left: -3rem; top: 0.2rem;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--gold); border: 3px solid var(--cream);
+  transform: translateX(-6px);
+}
+.timeline-time {
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--sky); margin-bottom: 0.3rem;
+}
+.timeline-item h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem;
+}
+.timeline-item p { font-size: 0.85rem; color: rgba(59,47,37,0.6); line-height: 1.6; }
+
+/* ============================================
+   PRICING / ҮНИЙН МЭДЭЭЛЭЛ
+   3 багц: Explorer, Nomad (featured), Basecamp
+   .featured класс = хамгийн алдартай багц,
+   арай том хэмжээтэй, алтан хүрээтэй
+   ============================================ */
+.pricing { background: var(--white); }
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; max-width: 1000px; margin: 2.5rem auto 0;
+}
+.price-card {
+  padding: 2.5rem 2rem;
+  border: 1px solid rgba(59,47,37,0.08);
+  border-radius: 4px; text-align: center;
+  transition: all 0.3s; background: var(--cream);
+  position: relative;
+}
+.price-card.featured {
+  border-color: var(--gold); background: var(--white);
+  transform: scale(1.03);
+  box-shadow: 0 20px 60px rgba(200,169,110,0.15);
+}
+.price-card.featured::before {
+  content: 'POPULAR'; position: absolute;
+  top: -0.7rem; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: var(--dark);
+  font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.2em; padding: 0.3rem 1rem;
+}
+.price-card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 700; margin-bottom: 0.3rem;
+}
+.price-duration { font-size: 0.75rem; color: rgba(59,47,37,0.5); margin-bottom: 1.5rem; }
+.price-amount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 0.3rem;
+}
+.price-amount span { font-size: 1rem; font-weight: 400; }
+.price-note { font-size: 0.75rem; color: rgba(59,47,37,0.5); margin-bottom: 1.5rem; }
+.price-features { text-align: left; margin-bottom: 1.5rem; }
+.price-features li {
+  list-style: none; padding: 0.4rem 0;
+  font-size: 0.82rem; color: rgba(59,47,37,0.7);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.price-features li::before { content: '✓'; color: var(--steppe); font-weight: 700; }
+.price-card.featured .btn-secondary {
+  background: var(--gold); color: var(--dark); border-color: var(--gold);
+}
+.price-card.featured .btn-secondary:hover {
+  background: var(--earth); color: var(--white);
+}
+
+/* ============================================
+   TESTIMONIALS / СЭТГЭГДЛҮҮД
+   3 баганатай карт - зочдын сэтгэгдэл
+   ============================================ */
+.testimonials { background: var(--cream); }
+.testimonial-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; max-width: 1100px; margin: 2.5rem auto 0;
+}
+.testimonial-card {
+  background: var(--white); padding: 2rem; border-radius: 4px;
+  border: 1px solid rgba(59,47,37,0.06);
+}
+.testimonial-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 1rem; letter-spacing: 2px; }
+.testimonial-card blockquote {
+  font-size: 0.9rem; line-height: 1.7;
+  color: rgba(59,47,37,0.7); margin-bottom: 1.2rem;
+  font-style: italic;
+}
+.testimonial-author { display: flex; align-items: center; gap: 0.8rem; }
+.testimonial-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 700; color: var(--white);
+}
+.testimonial-name { font-size: 0.85rem; font-weight: 600; }
+.testimonial-loc { font-size: 0.72rem; color: rgba(59,47,37,0.5); }
+
+/* ============================================
+   BOOKING / ЗАХИАЛГА
+   Gradient background дээр form байрлана.
+   Grid: 2 багана, .full класс = бүтэн өргөн
+   ============================================ */
+.booking {
+  background: linear-gradient(135deg, var(--earth), var(--dark));
+  color: var(--white);
+}
+.booking .section-tag { color: var(--gold); }
+.booking .section-title { color: var(--white); }
+.booking .section-desc { color: rgba(255,255,255,0.6); }
+.booking-form {
+  max-width: 700px; margin: 2.5rem auto 0;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label {
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+.form-group input, .form-group select, .form-group textarea {
+  padding: 0.8rem 1rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px; color: var(--white);
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+  transition: border-color 0.3s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--gold);
+}
+.form-group select option { background: var(--dark); }
+.form-group textarea { min-height: 100px; resize: vertical; }
+.form-submit {
+  grid-column: 1 / -1;
+  display: flex; justify-content: center; margin-top: 1rem;
+}
+
+/* ============================================
+   FAQ / ТҮГЭЭМЭЛ АСУУЛТУУД
+   Accordion загвар:
+   - .faq-question дарахад .active класс нэмэгдэнэ
+   - .faq-answer max-height: 0 → 300px болж нээгдэнэ
+   ============================================ */
+.faq { background: var(--white); }
+.faq-list { max-width: 700px; margin: 2.5rem auto 0; }
+.faq-item { border-bottom: 1px solid rgba(59,47,37,0.08); }
+.faq-question {
+  width: 100%; background: none; border: none;
+  padding: 1.3rem 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem; font-weight: 600;
+  color: var(--earth); text-align: left;
+  cursor: pointer; display: flex;
+  justify-content: space-between; align-items: center;
+}
+.faq-question::after {
+  content: '+'; font-size: 1.3rem;
+  color: var(--gold); font-weight: 300;
+  transition: transform 0.3s;
+}
+.faq-item.active .faq-question::after { transform: rotate(45deg); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.faq-answer p {
+  padding-bottom: 1.3rem;
+  font-size: 0.88rem; color: rgba(59,47,37,0.6); line-height: 1.7;
+}
+.faq-item.active .faq-answer { max-height: 300px; }
+
+/* ============================================
+   FOOTER
+   4 баганатай grid: брэнд + 3 линк багана
+   ============================================ */
+footer {
+  background: var(--dark); color: var(--white);
+  padding: 4rem 4% 2rem;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem; max-width: 1200px; margin: 0 auto;
+}
+.footer-brand h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 700; margin-bottom: 0.8rem;
+}
+.footer-brand h3 span { color: var(--gold); }
+.footer-brand p { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.7; max-width: 300px; }
+.footer-col h4 {
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1rem;
+}
+.footer-col a {
+  display: block; color: rgba(255,255,255,0.5);
+  text-decoration: none; font-size: 0.85rem;
+  padding: 0.25rem 0; transition: color 0.3s;
+}
+.footer-col a:hover { color: var(--white); }
+.footer-bottom {
+  max-width: 1200px; margin: 3rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 1rem;
+}
+.footer-bottom p { font-size: 0.75rem; color: rgba(255,255,255,0.35); }
+.footer-social { display: flex; gap: 1rem; }
+.footer-social a { color: rgba(255,255,255,0.4); font-size: 0.85rem; text-decoration: none; transition: color 0.3s; }
+.footer-social a:hover { color: var(--gold); }
+
+/* ============================================
+   RESPONSIVE / ДЭЛГЭЦИЙН ХЭМЖЭЭНД ТОХИРУУЛАХ
+   - 1024px: Таблет - зарим grid 2 багана болно
+   - 768px: Гар утас - 1 багана, цэс hamburger
+   ============================================ */
+@media (max-width: 1024px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .accom-grid { grid-template-columns: 1fr 1fr; }
+  .pricing-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  section { padding: 4rem 5%; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; flex-direction: column; }
+  .stats-bar { grid-template-columns: 1fr 1fr; }
+  .accom-grid { grid-template-columns: 1fr; }
+  .facility-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .price-card.featured { transform: none; }
+  .testimonial-grid { grid-template-columns: 1fr; }
+  .booking-form { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+  .about-features { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     NAVIGATION / ЦЭС
+     Бүх хуудасны линкүүд энд.
+     JS-ээр scroll хийхэд .scrolled класс нэмэгдэнэ.
+     ============================================ -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Nomad<span>Base</span></a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#stay">Stay</a>
+    <a href="#facilities">Facilities</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a href="#booking" class="btn-primary">Book Now</a>
+  </div>
+  <!-- Hamburger: Зөвхөн гар утсанд харагдана (768px доош) -->
+  <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.add('active')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Гар утасны бүтэн дэлгэцийн цэс -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-menu" onclick="this.parentElement.classList.remove('active')">&times;</button>
+  <a href="#about" onclick="this.parentElement.classList.remove('active')">About</a>
+  <a href="#stay" onclick="this.parentElement.classList.remove('active')">Stay</a>
+  <a href="#facilities" onclick="this.parentElement.classList.remove('active')">Facilities</a>
+  <a href="#pricing" onclick="this.parentElement.classList.remove('active')">Pricing</a>
+  <a href="#faq" onclick="this.parentElement.classList.remove('active')">FAQ</a>
+  <a href="#booking" onclick="this.parentElement.classList.remove('active')" class="btn-primary" style="margin-top:1rem;">Book Now</a>
+</div>
+
+<!-- ============================================
+     HERO SECTION / НҮҮР ХУУДАС
+     Вэбсайтын хамгийн эхний том хэсэг.
+     Зорилго: Зочдын анхаарлыг татаж,
+     CTA (Call-to-Action) товчоор захиалга руу чиглүүлэх.
+     ============================================ -->
+<section class="hero">
+  <!-- Gradient background: тэнгэр → тал нутаг -->
+  <div class="hero-bg"></div>
+  <!-- Бараан давхарга: текст сайн уншигдахын тулд -->
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">Mongolia's First Digital Nomad Retreat</div>
+    <h1>Work From the <em>Edge of the World</em></h1>
+    <p>5.5 hectares of untouched Mongolian steppe. High-speed internet. Traditional gers and modern cabins. A place where productivity meets the infinite horizon.</p>
+    <div class="hero-buttons">
+      <!-- Үндсэн CTA: Захиалга хэсэг рүү очно -->
+      <a href="#booking" class="btn-primary">Reserve Your Spot</a>
+      <!-- Хоёрдогч CTA: Дэлгэрэнгүй мэдээлэл рүү -->
+      <a href="#about" class="btn-outline">Explore the Camp</a>
+    </div>
+  </div>
+
+  <!-- Scroll indicator: доошоо чиглэсэн анимэйшн -->
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ============================================
+     STATS BAR / ТООН МЭДЭЭЛЭЛ
+     4 гол тоо: газрын хэмжээ, байр, интернэт, жил
+     ============================================ -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-number">5.5</div>
+    <div class="stat-label">Hectares / Га газар</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">10</div>
+    <div class="stat-label">Wooden Cabins / Модон байр</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">100+</div>
+    <div class="stat-label">Mbps Internet</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">365</div>
+    <div class="stat-label">Days Open / Жилийн турш</div>
+  </div>
+</div>
+
+<!-- ============================================
+     ABOUT / БИДНИЙ ТУХАЙ
+     Зүүн тал: Текст + 4 онцлох шинж (features)
+     Баруун тал: Том зурагтай хэсэг
+     ============================================ -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div>
+      <span class="section-tag">About Nomad Base</span>
+      <h2 class="section-title">Where Ancient Nomad Culture Meets Modern Remote Work</h2>
+      <p class="section-desc">
+        Nestled in the heart of Mongolia, Nomad Base is a retreat designed for digital professionals seeking inspiration, focus, and a connection to one of the world's last great wilderness frontiers.
+      </p>
+
+      <!-- 4 feature карт: 2x2 grid-ээр байрлана -->
+      <div class="about-features">
+        <div class="feature-card">
+          <span class="feature-icon">🏔️</span>
+          <h4>5.5 Hectare Campus</h4>
+          <p>Sprawling grounds with walking trails, meditation spots, and open steppe views.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📡</span>
+          <h4>Starlink Internet</h4>
+          <p>Reliable 100+ Mbps connectivity via Starlink satellite — video calls, uploads, no problem.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🍲</span>
+          <h4>Community Dining</h4>
+          <p>Fresh Mongolian cuisine daily. Communal meals bring nomads together every evening.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🐎</span>
+          <h4>Cultural Experiences</h4>
+          <p>Horse riding, eagle hunting demos, nomad family visits — the real Mongolia.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Баруун талын зургийн хэсэг -->
+    <div class="about-image-area">
+      <div class="about-image-text">
+        <div class="big-number">∞</div>
+        <p>Endless Horizon<br><small style="color:var(--gold);">Хязгааргүй тэнгэр</small></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     ACCOMMODATIONS / БАЙРЛАЛЫН СОНГОЛТУУД
+     3 төрлийн байр:
+     1. Монгол гэр - уламжлалт
+     2. Модон байшин - орчин үеийн тав тух
+     3. Удирдлагын байр - premium
+     ============================================ -->
+<section class="accommodations" id="stay">
+  <div style="text-align:center; max-width:600px; margin:0 auto 2rem;">
+    <span class="section-tag">Accommodations</span>
+    <h2 class="section-title">Choose Your Home on the Steppe</h2>
+    <p class="section-desc" style="margin:0 auto;">From traditional Mongolian gers to modern wooden cabins — every option comes with comfort, warmth, and an unforgettable view.</p>
+  </div>
+
+  <div class="accom-grid">
+    <!-- КАРТ 1: Монгол гэр -->
+    <div class="accom-card">
+      <div class="accom-image ger">
+        <div class="accom-image-label">GER</div>
+      </div>
+      <div class="accom-body">
+        <div class="accom-type">Traditional / Уламжлалт</div>
+        <h3>Mongolian Ger</h3>
+        <p>Authentic nomadic dwelling with modern bedding, heating stove, and traditional furnishing. Sleep under the toono and wake to the steppe sunrise.</p>
+        <div class="accom-details">
+          <span class="accom-tag">2 Guests</span>
+          <span class="accom-tag">Heated</span>
+          <span class="accom-tag">En-suite</span>
+          <span class="accom-tag">WiFi</span>
+        </div>
+        <div class="accom-price">
+          <span class="price">$45</span>
+          <span class="per">/ night</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- КАРТ 2: Модон байшин -->
+    <div class="accom-card">
+      <div class="accom-image cabin">
+        <div class="accom-image-label">CABIN</div>
+      </div>
+      <div class="accom-body">
+        <div class="accom-type">Modern Comfort / Орчин үе</div>
+        <h3>Wooden Cabin</h3>
+        <p>10 handcrafted wooden cabins with private workspace, underfloor heating, large windows framing the mountains. Your personal retreat within the retreat.</p>
+        <div class="accom-details">
+          <span class="accom-tag">1-2 Guests</span>
+          <span class="accom-tag">Private Desk</span>
+          <span class="accom-tag">Shower</span>
+          <span class="accom-tag">WiFi</span>
+        </div>
+        <div class="accom-price">
+          <span class="price">$65</span>
+          <span class="per">/ night</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- КАРТ 3: Удирдлагын байр -->
+    <div class="accom-card">
+      <div class="accom-image suite">
+        <div class="accom-image-label">SUITE</div>
+      </div>
+      <div class="accom-body">
+        <div class="accom-type">Premium / Тансаг</div>
+        <h3>Director's Suite</h3>
+        <p>Spacious premium quarters for team leaders or long-stay guests. Living area, private office, panoramic windows, and a dedicated balcony.</p>
+        <div class="accom-details">
+          <span class="accom-tag">2-3 Guests</span>
+          <span class="accom-tag">Office</span>
+          <span class="accom-tag">Balcony</span>
+          <span class="accom-tag">Premium WiFi</span>
+        </div>
+        <div class="accom-price">
+          <span class="price">$95</span>
+          <span class="per">/ night</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FACILITIES / БАЙГУУЛАМЖ
+     6 байгууламж: коворкинг, хоолны газар,
+     wellness, гадна талбай, арга хэмжээний зал,
+     нисэх буудлын трансфер
+     ============================================ -->
+<section class="facilities" id="facilities">
+  <div style="text-align:center; max-width:600px; margin:0 auto;">
+    <span class="section-tag">Facilities & Services</span>
+    <h2 class="section-title">Everything You Need to Thrive</h2>
+    <p class="section-desc" style="margin:0 auto;">Designed for productivity, wellness, and community.</p>
+  </div>
+
+  <div class="facility-grid">
+    <!-- Коворкинг -->
+    <div class="facility-item">
+      <div class="facility-icon">💻</div>
+      <div>
+        <h4>Coworking Space</h4>
+        <p>Ergonomic desks, standing stations, private phone booths, communal table. Open 24/7.</p>
+      </div>
+    </div>
+    <!-- Хоолны газар -->
+    <div class="facility-item">
+      <div class="facility-icon">🍽️</div>
+      <div>
+        <h4>Dining Hall</h4>
+        <p>Community kitchen serving breakfast, lunch, dinner. Fresh local ingredients, Mongolian and international dishes.</p>
+      </div>
+    </div>
+    <!-- Wellness -->
+    <div class="facility-item">
+      <div class="facility-icon">🧘</div>
+      <div>
+        <h4>Wellness Area</h4>
+        <p>Yoga platform, meditation garden, and sauna. Morning yoga included in all packages.</p>
+      </div>
+    </div>
+    <!-- Гадна талбай -->
+    <div class="facility-item">
+      <div class="facility-icon">🏕️</div>
+      <div>
+        <h4>Outdoor Lounge</h4>
+        <p>Fire pit, hammocks, stargazing deck. Zero light pollution — the Milky Way is yours.</p>
+      </div>
+    </div>
+    <!-- Арга хэмжээний зал -->
+    <div class="facility-item">
+      <div class="facility-icon">🎤</div>
+      <div>
+        <h4>Event Space</h4>
+        <p>Workshops, meetups, conferences up to 40 people. Projector, sound system, flexible seating.</p>
+      </div>
+    </div>
+    <!-- Трансфер -->
+    <div class="facility-item">
+      <div class="facility-icon">🚐</div>
+      <div>
+        <h4>Airport Transfer</h4>
+        <p>Scheduled transfers from Chinggis Khaan Airport (ULN) and Ulaanbaatar city center.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     EXPERIENCE / НЭГ ӨДРИЙН ХУВААРЬ
+     Timeline загвараар өглөөнөөс оройг хүртэл
+     ============================================ -->
+<section class="experience" id="experience">
+  <div style="text-align:center; max-width:600px; margin:0 auto;">
+    <span class="section-tag">A Day at Nomad Base</span>
+    <h2 class="section-title">Your Perfect Day on the Steppe</h2>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-time">7:00 AM</div>
+      <h4>Sunrise & Morning Yoga</h4>
+      <p>Wake to the Mongolian sunrise. Optional yoga on the outdoor platform overlooking the valley.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-time">8:00 AM</div>
+      <h4>Breakfast at the Dining Hall</h4>
+      <p>Fresh airag, homemade bread, eggs, and Mongolian milk tea. Fuel for the day.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-time">9:00 AM – 12:00 PM</div>
+      <h4>Deep Work Session</h4>
+      <p>Coworking space or your cabin. High-speed internet, quiet surroundings, maximum focus.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-time">12:30 PM</div>
+      <h4>Community Lunch</h4>
+      <p>Mongolian buuz, khuushuur, and international options. Meet fellow nomads.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-time">2:00 – 5:00 PM</div>
+      <h4>Afternoon Work or Adventure</h4>
+      <p>Continue working or join: horse riding, hiking, visiting local nomad families, archery.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-time">7:00 PM</div>
+      <h4>Dinner & Community Fire</h4>
+      <p>Communal dinner, campfire storytelling, stargazing, or peaceful silence under the Milky Way.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     PRICING / ҮНИЙН БАГЦУУД
+     3 багц:
+     1. Explorer: 3-7 хоног ($75/шөнө)
+     2. Nomad: 1-3 сар ($950/сар) - FEATURED
+     3. Basecamp: 3+ сар ($750/сар)
+     ============================================ -->
+<section class="pricing" id="pricing">
+  <div style="text-align:center; max-width:600px; margin:0 auto;">
+    <span class="section-tag">Pricing</span>
+    <h2 class="section-title">Stay as Long as You Want</h2>
+    <p class="section-desc" style="margin:0 auto;">All prices include accommodation, coworking, meals, and WiFi.</p>
+  </div>
+
+  <div class="pricing-grid">
+    <!-- EXPLORER багц -->
+    <div class="price-card">
+      <h3>Explorer</h3>
+      <div class="price-duration">3–7 nights</div>
+      <div class="price-amount">$75<span>/night</span></div>
+      <div class="price-note">Cabin or Ger</div>
+      <ul class="price-features">
+        <li>Accommodation of choice</li>
+        <li>3 meals per day</li>
+        <li>Coworking access 24/7</li>
+        <li>High-speed WiFi</li>
+        <li>1 cultural activity</li>
+      </ul>
+      <a href="#booking" class="btn-secondary">Book Explorer</a>
+    </div>
+
+    <!-- NOMAD багц (featured = хамгийн их захиалагддаг) -->
+    <div class="price-card featured">
+      <h3>Nomad</h3>
+      <div class="price-duration">1–3 months</div>
+      <div class="price-amount">$950<span>/month</span></div>
+      <div class="price-note">Best value for remote workers</div>
+      <ul class="price-features">
+        <li>Private wooden cabin</li>
+        <li>3 meals per day</li>
+        <li>Dedicated desk in coworking</li>
+        <li>Premium WiFi + backup</li>
+        <li>Weekly cultural activities</li>
+        <li>Laundry service</li>
+        <li>Airport transfer included</li>
+      </ul>
+      <a href="#booking" class="btn-secondary">Book Nomad</a>
+    </div>
+
+    <!-- BASECAMP багц -->
+    <div class="price-card">
+      <h3>Basecamp</h3>
+      <div class="price-duration">3+ months</div>
+      <div class="price-amount">$750<span>/month</span></div>
+      <div class="price-note">Long-term community rate</div>
+      <ul class="price-features">
+        <li>Choice of cabin or ger</li>
+        <li>3 meals per day</li>
+        <li>Private office option</li>
+        <li>Premium WiFi + backup</li>
+        <li>Unlimited activities</li>
+        <li>All services included</li>
+        <li>Community events access</li>
+      </ul>
+      <a href="#booking" class="btn-secondary">Book Basecamp</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     TESTIMONIALS / ЗОЧДЫН СЭТГЭГДЭЛ
+     3 карт: Берлин, Торонто, Токиогоос ирсэн
+     digital nomad-уудын сэтгэгдэл
+     ============================================ -->
+<section class="testimonials">
+  <div style="text-align:center; max-width:600px; margin:0 auto;">
+    <span class="section-tag">Testimonials</span>
+    <h2 class="section-title">What Nomads Say</h2>
+  </div>
+
+  <div class="testimonial-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <blockquote>"I came for a week and stayed for two months. The combination of productivity and raw nature is unlike anything I've experienced."</blockquote>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:var(--sky);">S</div>
+        <div>
+          <div class="testimonial-name">Sarah K.</div>
+          <div class="testimonial-loc">UX Designer, Berlin</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <blockquote>"The WiFi actually works — even for video calls. The food is incredible, the community is warm, and the sunsets are daily therapy."</blockquote>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:var(--steppe);">M</div>
+        <div>
+          <div class="testimonial-name">Marcus T.</div>
+          <div class="testimonial-loc">Software Dev, Toronto</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <blockquote>"Our team of 8 did a month-long offsite here. The event space is great, the cabins are cozy, and Mongolia gave us the creative reset we needed."</blockquote>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:var(--rust);">A</div>
+        <div>
+          <div class="testimonial-name">Ayaka N.</div>
+          <div class="testimonial-loc">Product Lead, Tokyo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     BOOKING FORM / ЗАХИАЛГЫН МАЯГТ
+     Бөглөх талбарууд:
+     - Нэр, мэйл, ирэх огноо, хугацаа
+     - Байрны төрөл, зочдын тоо
+     - Нэмэлт мессеж
+     Илгээхэд JS alert гарна (жинхэнэ backend
+     холбоход энд fetch() ашиглана)
+     ============================================ -->
+<section class="booking" id="booking">
+  <div style="text-align:center; max-width:600px; margin:0 auto;">
+    <span class="section-tag">Book Your Stay</span>
+    <h2 class="section-title">Reserve Your Place at Nomad Base</h2>
+    <p class="section-desc" style="margin:0 auto;">Fill in the form and we'll respond within 24 hours.</p>
+  </div>
+
+  <form class="booking-form" onsubmit="handleBooking(event)">
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" placeholder="Your name" required>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" placeholder="your@email.com" required>
+    </div>
+    <div class="form-group">
+      <label>Check-in Date</label>
+      <input type="date" required>
+    </div>
+    <div class="form-group">
+      <label>Duration / Хугацаа</label>
+      <select required>
+        <option value="">Select duration...</option>
+        <option>3-7 nights (Explorer)</option>
+        <option>1-3 months (Nomad)</option>
+        <option>3+ months (Basecamp)</option>
+        <option>Custom</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Accommodation / Байрлал</label>
+      <select required>
+        <option value="">Select type...</option>
+        <option>Traditional Ger / Гэр</option>
+        <option>Wooden Cabin / Модон байр</option>
+        <option>Director's Suite / Тансаг</option>
+        <option>No preference</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Guests / Зочид</label>
+      <select>
+        <option>1 person</option>
+        <option>2 people</option>
+        <option>3+ (team booking)</option>
+      </select>
+    </div>
+    <div class="form-group full">
+      <label>Message (Optional)</label>
+      <textarea placeholder="Tell us about your needs, dietary requirements, or questions..."></textarea>
+    </div>
+    <div class="form-submit">
+      <button type="submit" class="btn-primary" style="padding:0.9rem 3rem; font-size:0.85rem;">Send Booking Request</button>
+    </div>
+  </form>
+</section>
+
+<!-- ============================================
+     FAQ / ТҮГЭЭМЭЛ АСУУЛТУУД
+     Accordion загвар: дарахад нээгдэж хаагдана.
+     toggleFaq() функц JS хэсэгт тодорхойлогдсон.
+     ============================================ -->
+<section class="faq" id="faq">
+  <div style="text-align:center; max-width:600px; margin:0 auto;">
+    <span class="section-tag">FAQ</span>
+    <h2 class="section-title">Frequently Asked Questions</h2>
+  </div>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">How do I get to Nomad Base from Ulaanbaatar?</button>
+      <div class="faq-answer"><p>We offer scheduled transfers from Chinggis Khaan Airport (ULN) and UB city center. The drive takes 2-3 hours through scenic countryside. Private transfers also available.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">Is the internet reliable enough for remote work?</button>
+      <div class="faq-answer"><p>Yes! Starlink satellite with backup connections. 100+ Mbps average. Guests regularly do video calls, upload large files, and stream. Power backup system included.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">Is it open in winter?</button>
+      <div class="faq-answer"><p>365 days a year. Cabins and gers have robust heating. Winter in Mongolia means crystal skies, snow-covered steppe, and the best stargazing on Earth.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">Can I bring my team for an offsite?</button>
+      <div class="faq-answer"><p>Absolutely. Teams up to 20 welcome. Event space for workshops, team-building activities including horse riding, archery, guided hikes. Contact us for group pricing.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">Do I need a visa for Mongolia?</button>
+      <div class="faq-answer"><p>Many countries have visa-free entry for 30 days (USA, EU, UK, Canada, Australia, Japan, South Korea). We can help with extensions for longer stays.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">What meals are included?</button>
+      <div class="faq-answer"><p>All packages include 3 meals: Mongolian dishes (buuz, khuushuur, tsuivan) and international options. Vegetarian, vegan, and other dietary needs accommodated.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     Доод хэсэг: Брэнд мэдээлэл, холбоосууд,
+     холбоо барих, сошиал медиа
+     ============================================ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>Nomad<span>Base</span></h3>
+      <p>Mongolia's first purpose-built digital nomad retreat. Where remote work meets the untamed steppe.</p>
+      <p style="margin-top:1rem;">
+        <small style="color:var(--gold);">📍 Central Mongolia</small><br>
+        <small>info@nomadbase.mn</small><br>
+        <small>+976 9911 2233</small>
+      </p>
+    </div>
+    <div class="footer-col">
+      <h4>Stay</h4>
+      <a href="#stay">Mongolian Ger</a>
+      <a href="#stay">Wooden Cabin</a>
+      <a href="#stay">Director's Suite</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div class="footer-col">
+      <h4>Experience</h4>
+      <a href="#facilities">Coworking</a>
+      <a href="#facilities">Dining</a>
+      <a href="#experience">Daily Life</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="#">Instagram</a>
+      <a href="#">Twitter / X</a>
+      <a href="#">YouTube</a>
+      <a href="#">LinkedIn</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 NomadBase Mongolia. All rights reserved.</p>
+    <div class="footer-social">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================
+     JAVASCRIPT
+     Энд бүх интерактив функцүүд байна:
+
+     1. NAV SCROLL EFFECT
+        - window.scrollY > 80 бол nav-д .scrolled
+          класс нэмнэ → бараан background гарна
+
+     2. FAQ ACCORDION (toggleFaq)
+        - Асуулт дарахад .active класс toggle хийнэ
+        - Бусад нээлттэй FAQ-г автоматаар хаана
+        - max-height: 0 → 300px болж контент гарна
+
+     3. BOOKING FORM (handleBooking)
+        - e.preventDefault() = хуудас refresh болохгүй
+        - alert() = баярлалаа мессеж
+        - e.target.reset() = маягтыг цэвэрлэнэ
+        - ЖИНХЭНЭ BACKEND ХОЛБОХ ҮЕД:
+          fetch('https://your-api.com/bookings', {
+            method: 'POST',
+            body: JSON.stringify(formData)
+          })
+
+     4. SCROLL ANIMATION (IntersectionObserver)
+        - Бүх section-ийг ажиглана
+        - Дэлгэцэнд орж ирэхэд opacity: 0 → 1
+          болж fade-in анимэйшн хийнэ
+        - threshold: 0.1 = 10% харагдахад идэвхжинэ
+     ============================================ -->
+<script>
+// ===== 1. NAV SCROLL EFFECT =====
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 80) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+});
+
+// ===== 2. FAQ ACCORDION =====
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  // Бусад нээлттэй FAQ хаах
+  document.querySelectorAll('.faq-item.active').forEach(el => {
+    if (el !== item) el.classList.remove('active');
+  });
+  // Одоогийн FAQ toggle
+  item.classList.toggle('active');
+}
+
+// ===== 3. BOOKING FORM HANDLER =====
+function handleBooking(e) {
+  e.preventDefault();
+  // TODO: Backend API руу илгээх
+  // const formData = new FormData(e.target);
+  // fetch('/api/bookings', { method: 'POST', body: formData });
+  alert('Thank you! 🏔️\nWe will respond within 24 hours.\n\nБаярлалаа! 24 цагийн дотор хариу өгнө.');
+  e.target.reset();
+}
+
+// ===== 4. SCROLL ANIMATION =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('section').forEach(section => {
+  section.style.opacity = '0';
+  section.style.transform = 'translateY(30px)';
+  section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+  observer.observe(section);
+});
+</script>
+
+</body>
+</html>
