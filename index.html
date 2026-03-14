@@ -158,17 +158,8 @@ nav.scrolled {
 }
 .hero-bg {
   position: absolute; inset: 0; z-index: 0;
-  /* Unsplash-ийн Монголын тал нутгийн зураг ашиглаж байна.
-     url() дотор зургийн линкийг оруулна.
-     background-size: cover = зураг бүтэн дэлгэцийг хамарна.
-     background-position: center = зургийн голыг харуулна.
-     Өөрийн зураг оруулахдаа url()-г солиход л хангалттай. */
-  background: url('https://images.unsplash.com/photo-1617817346142-a3ca6913d4b7?w=1920&q=80') center/cover no-repeat;
-}
-/* Нөөц gradient: хэрэв зураг ачааллахгүй бол энэ өнгө харагдана */
-.hero-bg-fallback {
-  position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(180deg, #3A6B85 0%, #6A9DB5 25%, #A8C4D0 50%, #C4BFA0 70%, #7A8B5C 85%, #5A6B3E 100%);
+  /* images/hero.jpg зургийг ашиглаж байна */
+  background: url('images/hero.jpg') center/cover no-repeat;
 }
 .hero-overlay {
   position: absolute; inset: 0; z-index: 1;
@@ -310,8 +301,8 @@ section { padding: 6rem 4%; }
   border-radius: 4px; height: 500px;
   overflow: hidden;
   display: flex; align-items: center; justify-content: center;
-  /* Монголын уул, нуурын зураг */
-  background: url('https://images.unsplash.com/photo-1599480241736-af60ef984019?w=800&q=80') center/cover no-repeat;
+  /* Монголын уул, нуурын зураг - gradient ашиглаж байна */
+  background: var(--steppe);
 }
 .about-image-area::before {
   content: ''; position: absolute; inset: 0;
@@ -351,15 +342,15 @@ section { padding: 6rem 4%; }
   box-shadow: 0 20px 60px rgba(59,47,37,0.1);
 }
 .accom-image { height: 220px; position: relative; }
-/* Байрлалын картуудын зураг */
+/* Байрлалын картуудын зураг - gradient ашиглаж байна */
 .accom-image.ger {
-  background: url('https://images.unsplash.com/photo-1614094082869-cd4e6b6591b0?w=600&q=80') center/cover no-repeat;
+  background: linear-gradient(135deg, #6A9DB5, #A8C4D0);
 }
 .accom-image.cabin {
-  background: url('https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=600&q=80') center/cover no-repeat;
+  background: linear-gradient(135deg, #8B6F4E, #A0845C);
 }
 .accom-image.suite {
-  background: url('https://images.unsplash.com/photo-1618767689160-da57024a43b1?w=600&q=80') center/cover no-repeat;
+  background: linear-gradient(135deg, #7A8B5C, #5B8BA0);
 }
 .accom-image-label {
   position: absolute; bottom: 1rem; left: 1rem;
@@ -725,9 +716,7 @@ footer {
      CTA (Call-to-Action) товчоор захиалга руу чиглүүлэх.
      ============================================ -->
 <section class="hero">
-  <!-- Gradient fallback: зураг ачааллахгүй бол энэ харагдана -->
-  <div class="hero-bg-fallback"></div>
-  <!-- Монголын тал нутгийн зураг (Unsplash-аас) -->
+  <!-- Монголын тал нутгийн зураг (background-image CSS-ээс ирнэ) -->
   <div class="hero-bg"></div>
   <!-- Бараан давхарга: текст сайн уншигдахын тулд -->
   <div class="hero-overlay"></div>
